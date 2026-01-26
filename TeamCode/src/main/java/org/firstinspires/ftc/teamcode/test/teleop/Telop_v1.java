@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.test.mechanism.Drive;
 import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
 
-@TeleOp(name = "Final Teleop TeleOpv2", group = "test")
+@TeleOp(name = "Teleop TeleOpv1", group = "test")
 public class Telop_v1 extends OpMode {
     Drive drive = new Drive();
     Intake_transfer intake_transfer = new Intake_transfer();
