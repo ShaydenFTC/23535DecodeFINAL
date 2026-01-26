@@ -84,14 +84,21 @@ public class Telop_v1 extends OpMode {
         double yaw     =  gamepad1.right_stick_x;
         drive.setDriveMotorPower(axial, lateral, yaw, speed_percentage);
 
+        telemetry.setMsTransmissionInterval(50);
+
         /// Display
         telemetry.addData("Status", "Run Time: " + runtime.seconds());
         ///Displaying current speed.
         telemetry.addData("Current Speed", speedCap, " / " , speed_percentage);
-        /// Display Launcher
-        telemetry.addData("Turret encoder", aim.getCurrentPosition());
+        /// Display launcher power
+        telemetry.addData("Launcher Power", launcher.getPower());
+        ///  Display launcher encoder
+        telemetry.addData("Launcher Encoder", launcher.getCurrentPosition());
 
-        telemetry.addData("Hood position", hood.getPosition());
+        double ticksPerSecond = launcher.getVelocity();
+        double rpm = (ticksPerSecond * 60) / 28;
+        telemetry.addData("RPM", rpm);
+
 
 
     }
