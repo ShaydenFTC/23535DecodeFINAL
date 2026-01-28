@@ -19,39 +19,27 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-48.5, 48.5, Math.toRadians(315)))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 13.5, Math.toRadians(180)))
 
-                /// moving and shooter first set
-                .splineToLinearHeading(new Pose2d(-40, 40, Math.toRadians(315)), Math.toRadians(315))
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-15, 15, Math.toRadians(135)), Math.toRadians(180))
                 .waitSeconds(3)
 
-                /// moving to and intaking second set
-                .splineToLinearHeading(new Pose2d(-12, 30, Math.toRadians(90)), Math.toRadians(90))
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(35, 30, Math.toRadians(90)), Math.toRadians(0))
+                .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(
-                        new Pose2d(-12, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(35, 50, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(10),
-                        new ProfileAccelConstraint(-15, 15))
+                        new ProfileAccelConstraint(-25, 25))
 
-                /// realeasing first set
-                .setTangent(180)
-                .splineToLinearHeading(new Pose2d(0, 53, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(2)
-                /// moving to and shooting second set
-                .setTangent(180)
-                .splineToLinearHeading(new Pose2d(-40, 40, Math.toRadians(315)), Math.toRadians(135))
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(-15, 15, Math.toRadians(135)), Math.toRadians(180))
                 .waitSeconds(3)
+                .setTangent(Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(20, 20, Math.toRadians(90)), Math.toRadians(0))
 
-                /// Intaking 3rd set
-                .splineToLinearHeading(new Pose2d(-40, 40, Math.toRadians(315)), Math.toRadians(315))
-                .splineToLinearHeading(new Pose2d(12, 30, Math.toRadians(90)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(12, 50, Math.toRadians(90)), Math.toRadians(90),
-                        new TranslationalVelConstraint(10),
-                        new ProfileAccelConstraint(-15, 15))
-                /// moving and shooting 3rd set
-                .setTangent(180)
-                .splineToLinearHeading(new Pose2d(-40, 40, Math.toRadians(315)), Math.toRadians(135))
-                .waitSeconds(3)
-                .splineToLinearHeading(new Pose2d(-40, 40, Math.toRadians(315)), Math.toRadians(135))
+
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)
