@@ -17,6 +17,10 @@ public class WebCamTest {
     private int teamid;
     private double bearing = 0;
     private double lastBearing = 0;
+    private double elevation = 0;
+    private double lastElevation = 0;
+    private double range = 0;
+    private double lastRange = 0;
 
     public void init(HardwareMap hardwareMap) {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
@@ -51,12 +55,44 @@ public class WebCamTest {
         return lastBearing;
     }
 
+    public double CamAprilTagsElevation(String team) {
+
+        if (team.equals("red")) { //Set for testing, not actual values
+            teamid = 2;
+        } else {
+            teamid = 1;
+        }
+
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                elevation = detection.ftcPose.elevation;
+                lastElevation = elevation;
+            }
+
+        }
+
+        return lastElevation;
+    }
+
+    public double CamAprilTagsRange(String team) {
+
+        if (team.equals("red")) { //Set for testing, not actual values
+            teamid = 2;
+        } else {
+            teamid = 1;
+        }
+
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                range = detection.ftcPose.range;
+                lastRange = range;
+            }
+
+        }
+
+        return lastRange;
+    }
+
 }
-
-
-
-
-
-
-
-

@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.test.mechanism.HuskyLensCam;
 public class HoodTest extends OpMode {
     private Servo hood = null;
 
-    HuskyLensCam lensCam = new HuskyLensCam();
+    WebCamTest lensCam = new WebCamTest();
+
 
     @Override
     public void init() {
@@ -23,11 +24,11 @@ public class HoodTest extends OpMode {
     @Override
     public void loop() {
 
-        double size = lensCam.SeeAprilTagsSize("red");
+        double range = lensCam.CamAprilTagsRange("red");
 
-        hood.setPosition(-2.74E-04 * size + 0.791);
-        telemetry.addData("size ",size);
+        hood.setPosition(-2.74E-04 * range + 0.791);
+        telemetry.addData("size ",range);
         telemetry.addData("hood position", hood.getPosition());
-        telemetry.addData("equation ", -2.74E-04 * size + 0.791);
+        telemetry.addData("equation ", -2.74E-04 * range + 0.791);
     }
 }

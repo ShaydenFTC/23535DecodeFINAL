@@ -3,46 +3,41 @@ package org.firstinspires.ftc.teamcode.test.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.test.mechanism.Drive;
 import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
+import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
 
 @TeleOp(name = "Teleop TeleOpv1", group = "test")
 public class Telop_v1 extends OpMode {
     Drive drive = new Drive();
     Intake_transfer intake_transfer = new Intake_transfer();
+    PIDshooter pidShooter = new PIDshooter();
 
     private Servo hood = null;
-
 
     DcMotorEx aim = null;
 
     private final ElapsedTime runtime = new ElapsedTime();
 
-    DcMotorEx launcher = null;
-
     String speedCap = "Normal";
     double speed_percentage = 100.0;
 
-    double target = 0;
+    // PID constants from PIDControllerShooter
+    public static double Kp = 0.005;
+    public static double Ki = 0;
+    public static double Kd = 0;
+    double targetRPM = 0;
 
     @Override
     public void init() {
         runtime.reset();
 
         drive.init(hardwareMap);
-
         intake_transfer.init(hardwareMap);
-
-        launcher = hardwareMap.get(DcMotorEx.class, "launcher");
-
-        launcher.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        launcher.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        launcher.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        launcher.setDirection(DcMotorSimple.Direction.REVERSE);
+        pidShooter.init(hardwareMap);
 
         aim = hardwareMap.get(DcMotorEx.class, "aim");
         aim.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,16 +54,16 @@ public class Telop_v1 extends OpMode {
                 gamepad2.right_trigger - gamepad2.left_trigger);
 
         intake_transfer.setKicker(gamepad2.right_bumper);
-        ///  Launcher code
 
-
+        /// Launcher PID control
         if (gamepad2.left_stick_y > 0.1) {
-            launcher.setPower(0.43);
+            targetRPM = 1500;
         } else if (gamepad2.left_stick_y < -0.1) {
-            launcher.setPower(-0.43);
+            targetRPM = -1500;
         } else {
-            launcher.setPower(0);
+            targetRPM = 0;
         }
+            pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
 
         /// Sets the speed cap for driver 1.
         if (gamepad1.y) {
@@ -88,18 +83,12 @@ public class Telop_v1 extends OpMode {
 
         /// Display
         telemetry.addData("Status", "Run Time: " + runtime.seconds());
-        ///Displaying current speed.
         telemetry.addData("Current Speed", speedCap, " / " , speed_percentage);
-        /// Display launcher power
-        telemetry.addData("Launcher Power", launcher.getPower());
-        ///  Display launcher encoder
-        telemetry.addData("Launcher Encoder", launcher.getCurrentPosition());
+        telemetry.addData("Launcher Power", pidShooter.getPower());
+        telemetry.addData("Target RPM", targetRPM);
+        telemetry.addData("Actual RPM", pidShooter.getRPM());
+        telemetry.addData("Smoothed RPM", pidShooter.getSmoothedRPM());
 
-        double ticksPerSecond = launcher.getVelocity();
-        double rpm = (ticksPerSecond * 60) / 28;
-        telemetry.addData("RPM", rpm);
-
-
-
+        telemetry.update();
     }
 }
