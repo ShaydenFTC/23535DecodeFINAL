@@ -57,7 +57,7 @@ public class PIDshooter {
             lastTime = currentTime;
 
             // Using power clamping instead of just the deadzone check
-            if (launcher.getPower() > 0.01 && target > 0 && target < 0) {
+            if (Math.abs(result) > 0.05) {
             launcher.setPower(Math.max(-1.0, Math.min(1.0, result)));
             } else {
                 launcher.setPower(0);

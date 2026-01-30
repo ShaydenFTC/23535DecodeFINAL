@@ -57,9 +57,9 @@ public class Telop_v1 extends OpMode {
 
         /// Launcher PID control
         if (gamepad2.left_stick_y > 0.1) {
-            targetRPM = 1500;
+            targetRPM = 2150;
         } else if (gamepad2.left_stick_y < -0.1) {
-            targetRPM = -1500;
+            targetRPM = -2150;
         } else {
             targetRPM = 0;
         }
