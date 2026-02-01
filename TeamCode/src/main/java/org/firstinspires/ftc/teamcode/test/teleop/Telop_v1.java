@@ -31,6 +31,8 @@ public class Telop_v1 extends OpMode {
     public static double Kd = 0;
     double targetRPM = 0;
 
+    double ServoPosition;
+
     @Override
     public void init() {
         runtime.reset();
@@ -64,7 +66,15 @@ public class Telop_v1 extends OpMode {
             targetRPM = 0;
         }
             pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
+        /// hood controls
 
+        if (gamepad2.x && ServoPosition < 1) {
+            ServoPosition = ServoPosition + 0.003;
+        } else if (gamepad2.y && ServoPosition > 0) {
+            ServoPosition = ServoPosition - 0.003;
+        }
+
+        hood.setPosition(ServoPosition);
         /// Sets the speed cap for driver 1.
         if (gamepad1.y) {
             speedCap = "Normal";
@@ -88,6 +98,7 @@ public class Telop_v1 extends OpMode {
         telemetry.addData("Target RPM", targetRPM);
         telemetry.addData("Actual RPM", pidShooter.getRPM());
         telemetry.addData("Smoothed RPM", pidShooter.getSmoothedRPM());
+        telemetry.addData("Hood Position", hood.getPosition());
 
         telemetry.update();
     }
