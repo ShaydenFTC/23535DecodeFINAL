@@ -21,6 +21,8 @@ public class Telop_v1 extends OpMode {
     DcMotorEx aim = null;
 
     private final ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime jamTimer = new ElapsedTime();
+    private boolean isJamming = false;
 
     String speedCap = "Normal";
     double speed_percentage = 100.0;
@@ -50,22 +52,42 @@ public class Telop_v1 extends OpMode {
     }
     @Override
     public void loop() {
+        double g1Intake = gamepad1.right_trigger - gamepad1.left_trigger;
+        double g2Intake = gamepad2.right_trigger - gamepad2.left_trigger;
 
-        /// Intake and transfer controls
-        intake_transfer.intake(gamepad1.right_trigger - gamepad1.left_trigger,
-                gamepad2.right_trigger - gamepad2.left_trigger);
-
-        intake_transfer.setKicker(gamepad2.right_bumper);
-
-        /// Launcher PID control
-        if (gamepad2.left_stick_y > 0.1) {
-            targetRPM = 2150;
-        } else if (gamepad2.left_stick_y < -0.1) {
-            targetRPM = -2150;
-        } else {
-            targetRPM = 0;
+        // Anti-jam: triggers if idle, PID settled (power 0), spinning forward (< -10 RPM), and intaking
+        if (targetRPM == 0 && pidShooter.getPower() == 0 && pidShooter.getRPM() < -10 && !isJamming && (g1Intake > 0.1 || g2Intake > 0.1)) {
+            isJamming = true;
+            jamTimer.reset();
         }
+
+        if (isJamming) {
+            if (jamTimer.seconds() < 0.5) {
+                pidShooter.LauncherPID(500, Kp, Ki, Kd);
+                intake_transfer.intake(0, -1);
+                return;
+            } else {
+                isJamming = false;
+            }
+        }
+
+        if (!isJamming) {
+            /// Intake and transfer controls
+            intake_transfer.intake(g1Intake, g2Intake);
+
+            intake_transfer.setKicker(gamepad2.right_bumper);
+
+            /// Launcher PID control
+            if (gamepad2.left_stick_y > 0.1) {
+                targetRPM = 2150;
+            } else if (gamepad2.left_stick_y < -0.1) {
+                targetRPM = -2150;
+            } else {
+                targetRPM = 0;
+            }
             pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
+        }
+
         /// hood controls
 
         if (gamepad2.x && ServoPosition < 1) {
@@ -93,6 +115,7 @@ public class Telop_v1 extends OpMode {
 
         /// Display
         telemetry.addData("Status", "Run Time: " + runtime.seconds());
+        telemetry.addData("Jamming?", isJamming);
         telemetry.addData("Current Speed", speedCap, " / " , speed_percentage);
         telemetry.addData("Launcher Power", pidShooter.getPower());
         telemetry.addData("Target RPM", targetRPM);

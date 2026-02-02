@@ -82,7 +82,4 @@ public class Intake_transfer {
         intake.setPower(1);
     }
 
-
-
-
 }
