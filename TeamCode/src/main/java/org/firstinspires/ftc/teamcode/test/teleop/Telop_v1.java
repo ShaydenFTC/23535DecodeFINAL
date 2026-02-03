@@ -49,29 +49,33 @@ public class Telop_v1 extends OpMode {
         aim.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
         hood = hardwareMap.get(Servo.class,"hood");
+        
+        // Start timer high so jam can trigger immediately on start
+        jamTimer.reset();
     }
     @Override
     public void loop() {
         double g1Intake = gamepad1.right_trigger - gamepad1.left_trigger;
         double g2Intake = gamepad2.right_trigger - gamepad2.left_trigger;
 
-        // Anti-jam: triggers if idle, PID settled (power 0), spinning forward (< -10 RPM), and intaking
-        if (targetRPM == 0 && pidShooter.getPower() == 0 && pidShooter.getRPM() < -10 && !isJamming && (g1Intake > 0.1 || g2Intake > 0.1)) {
+
+        if (targetRPM == 0 && pidShooter.getPower() == 0 && pidShooter.getRPM() < -40 && !isJamming && (g1Intake > 0.1 || g2Intake > 0.1) && jamTimer.seconds() > 1.5) {
             isJamming = true;
             jamTimer.reset();
         }
 
         if (isJamming) {
-            if (jamTimer.seconds() < 0.5) {
-                pidShooter.LauncherPID(500, Kp, Ki, Kd);
+            if (jamTimer.seconds() < 1) {
                 intake_transfer.intake(0, -1);
-                return;
+                if (jamTimer.seconds() < 0.5) {
+                    pidShooter.LauncherPID(500, Kp, Ki, Kd);
+                }
             } else {
                 isJamming = false;
             }
         }
 
-        if (!isJamming) {
+        if (!isJamming || jamTimer.seconds() > 0.5) {
             /// Intake and transfer controls
             intake_transfer.intake(g1Intake, g2Intake);
 

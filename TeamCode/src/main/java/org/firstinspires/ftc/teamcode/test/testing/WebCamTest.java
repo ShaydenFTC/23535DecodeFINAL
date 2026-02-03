@@ -46,7 +46,8 @@ public class WebCamTest {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                bearing = detection.ftcPose.bearing;
+                // Negating bearing because camera is upside down
+                bearing = -detection.ftcPose.bearing;
                 lastBearing = bearing;
             }
 
@@ -66,7 +67,8 @@ public class WebCamTest {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                elevation = detection.ftcPose.elevation;
+                // Negating elevation because camera is upside down
+                elevation = -detection.ftcPose.elevation;
                 lastElevation = elevation;
             }
 
