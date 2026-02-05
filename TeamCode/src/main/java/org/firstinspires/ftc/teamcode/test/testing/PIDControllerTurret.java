@@ -14,16 +14,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
 @Config
-@Disabled
 
 @TeleOp(name = "PIDControllerTurret", group = "test")
 public class PIDControllerTurret extends OpMode {
 
-    public static double Kp = 0.01;
+    public static double Kp = 0.007;
     public static double Ki = 0.0;
-    public static double Kd = 0.0015;
-    public static double target = 0;
-
+    public static double Kd = 0.0002;
+    public static double target = -12;
     public static double result = 0;
 
     public static double TargetPos = 0;
@@ -79,7 +77,7 @@ public class PIDControllerTurret extends OpMode {
         // Target value
         double target = PIDControllerTurret.target;
 
-        double Encoder = aim.getCurrentPosition() * 1;
+        double Encoder = aim.getCurrentPosition() / 1680;
         if (xcoord != OldXcoord) {
             imu.resetYaw();
             offset = Encoder;
@@ -104,9 +102,11 @@ public class PIDControllerTurret extends OpMode {
 
             if (Math.abs(error) < Math.abs(DeadZone)) {
                 result = 0;
-            } else if (aim.getCurrentPosition() < -30 && result < 0) {
+            } else if (aim.getCurrentPosition() < -300 && result < 0) {
                 result = 0;
-            } else if (aim.getCurrentPosition() > 30 && result > 0) {
+            } else if (aim.getCurrentPosition() > 300 && result > 0) {
+                result = 0;
+            } else if (xcoord == 0) {
                 result = 0;
             }
 
@@ -122,7 +122,7 @@ public class PIDControllerTurret extends OpMode {
             packet.put("Encoder Position", aim.getCurrentPosition());
             packet.put("Xcoord", xcoord);
             packet.put("target", target);
-            packet.put("Power", aim.getPower() * 100);
+            packet.put("Power", -aim.getPower() * 100);
             packet.put("targetpos ", TargetPos);
             packet.put("deadzone ", DeadZone);
             packet.put("error", error);

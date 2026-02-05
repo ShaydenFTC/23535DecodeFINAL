@@ -61,7 +61,7 @@ public class PIDTurret {
 
         xcoord = lensCam.CamAprilTags("red");
 
-        double Encoder = aim.getCurrentPosition() * 1;
+        double Encoder = aim.getCurrentPosition() / 1680;
         if (xcoord != OldXcoord) {
             imu.resetYaw();
             offset = Encoder;
@@ -86,9 +86,11 @@ public class PIDTurret {
 
             if (Math.abs(error) < Math.abs(DeadZone)) {
                 result = 0;
-            } else if (aim.getCurrentPosition() < -24 && result < 0) {
+            } else if (aim.getCurrentPosition() < -300 && result < 0) {
                 result = 0;
-            } else if (aim.getCurrentPosition() > 24 && result > 0) {
+            } else if (aim.getCurrentPosition() > 300 && result > 0) {
+                result = 0;
+            } else if (xcoord == 0) {
                 result = 0;
             }
 

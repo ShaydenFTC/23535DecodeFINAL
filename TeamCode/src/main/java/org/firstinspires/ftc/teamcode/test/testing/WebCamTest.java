@@ -17,8 +17,6 @@ public class WebCamTest {
     private int teamid;
     private double bearing = 0;
     private double lastBearing = 0;
-    private double elevation = 0;
-    private double lastElevation = 0;
     private double range = 0;
     private double lastRange = 0;
 
@@ -68,13 +66,12 @@ public class WebCamTest {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 // Negating elevation because camera is upside down
-                elevation = -detection.ftcPose.elevation;
-                lastElevation = elevation;
+                return -detection.ftcPose.elevation;
             }
 
         }
 
-        return lastElevation;
+        return 0; // Return 0 if not seen
     }
 
     public double CamAprilTagsRange(String team) {
