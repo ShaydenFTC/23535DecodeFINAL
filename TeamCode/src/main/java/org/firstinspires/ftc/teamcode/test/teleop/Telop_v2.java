@@ -70,12 +70,10 @@ public class Telop_v2 extends OpMode {
             intake_transfer.setKicker(gamepad2.right_bumper);
 
             /// Launcher PID control
-            if (gamepad2.left_stick_y > 0.1) {
-                targetRPM = 2150;
-            } else if (gamepad2.left_stick_y < -0.1) {
-                targetRPM = -2150;
-            } else {
-                targetRPM = 0;
+            if (gamepad2.a) {
+                targetRPM = targetRPM + 3;
+            } else if (gamepad2.b) {
+                targetRPM = targetRPM - 3;
             }
             pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
 
@@ -84,9 +82,9 @@ public class Telop_v2 extends OpMode {
         /// hood controls
 
         if (gamepad2.x && ServoPosition < 1) {
-            ServoPosition = ServoPosition + 0.003;
+            ServoPosition = ServoPosition + 0.001;
         } else if (gamepad2.y && ServoPosition > 0) {
-            ServoPosition = ServoPosition - 0.003;
+            ServoPosition = ServoPosition - 0.001;
         }
 
         hood.setPosition(ServoPosition);
