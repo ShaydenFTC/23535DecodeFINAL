@@ -23,47 +23,20 @@ public class RoadRunnerTest extends LinearOpMode {
 
     Intake_transfer intake = new Intake_transfer();
 
-    /// Intake
-    public class IntakeOn implements InstantFunction {
-        @Override
-        public void run() {
-            intake.intakein(true);
-        }
-    }
-    public class IntakeOff implements InstantFunction {
-        @Override
-        public void run() {
-            intake.intakein(false);
-        }
-    }
-
-    /// Intake Transfer
-    public class IntakeTransferOn implements InstantFunction {
-        @Override
-        public void run() {
-            intake.transfer(true);
-        }
-    }
-    public class IntakeTransferOff implements InstantFunction {
-        @Override
-        public void run() {
-            intake.transfer(false);
-        }
-    }
-    /// Intake Transfer Back
 
 
     /// Kicker Controls
-    public class KickerUp implements InstantFunction {
+    public class Intake implements InstantFunction {
         @Override
         public void run() {
-            intake.setKicker(true);
+            intake.intake(1,1);
         }
     }
-    public class KickerDown implements InstantFunction {
+
+    public class stopintake implements InstantFunction {
         @Override
         public void run() {
-            intake.setKicker(false);
+            intake.intake(0,0);
         }
     }
 
@@ -87,10 +60,12 @@ public class RoadRunnerTest extends LinearOpMode {
                 /// moving to intake area
                 .splineToSplineHeading(new Pose2d(-12, 30, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
+                .stopAndAdd(new Intake())
                 .splineToSplineHeading(
                         new Pose2d(-12, 50, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
                         new ProfileAccelConstraint(-15, 15))
+                .stopAndAdd(new stopIntake())
                 /// moving to gate
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(0, 53, Math.toRadians(90)), Math.toRadians(90))
@@ -104,10 +79,12 @@ public class RoadRunnerTest extends LinearOpMode {
                 /// moving to intake
                 .splineToSplineHeading(new Pose2d(12, 30, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
+                .stopAndAdd(new Intake())
                 .splineToSplineHeading(
                         new Pose2d(12, 50, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
                         new ProfileAccelConstraint(-15, 15))
+                .stopAndAdd(new stopIntake())
                 /// moving to shoot
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(45)), Math.toRadians(135))

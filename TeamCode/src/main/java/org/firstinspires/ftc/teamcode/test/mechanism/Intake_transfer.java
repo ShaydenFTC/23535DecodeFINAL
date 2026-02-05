@@ -70,16 +70,4 @@ public class Intake_transfer {
         }
     }
 
-    public void intakein(boolean ButtonPressed) {
-        intake.setPower(-1);
-    }
-
-    public void transfer(boolean ButtonPressed) {
-        intake.setPower(1);
-    }
-
-    public void transferback(boolean ButtonPressed) {
-        intake.setPower(1);
-    }
-
 }
