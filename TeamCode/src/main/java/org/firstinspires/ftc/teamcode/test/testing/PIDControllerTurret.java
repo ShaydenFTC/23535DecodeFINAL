@@ -44,6 +44,7 @@ public class PIDControllerTurret extends OpMode {
     private double lastError;
     private long lastTime;
 
+
     private FtcDashboard dashboard;
 
     public void init() {
@@ -77,14 +78,14 @@ public class PIDControllerTurret extends OpMode {
         // Target value
         double target = PIDControllerTurret.target;
 
-        double Encoder = aim.getCurrentPosition() / 1680;
+        double Encoder = aim.getCurrentPosition() / 4.6666;
         if (xcoord != OldXcoord) {
             imu.resetYaw();
             offset = Encoder;
         }
         IMU = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - offset;
         double turretWorld = (Encoder + IMU);
-        double TargetPos = (turretWorld + (xcoord * 1.71875) % 360);
+        double TargetPos = (turretWorld + (xcoord * 1.71875)) % 360;
         OldXcoord = xcoord;
 
         if (dt >= 0.01) {
@@ -126,6 +127,11 @@ public class PIDControllerTurret extends OpMode {
             packet.put("targetpos ", TargetPos);
             packet.put("deadzone ", DeadZone);
             packet.put("error", error);
+            packet.put("IMU", IMU);
+            packet.put("Actual IMU", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            packet.put("turretWorld", turretWorld);
+            packet.put("offset", offset);
+            packet.put("encoder", Encoder);
 
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
