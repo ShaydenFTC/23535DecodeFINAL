@@ -15,7 +15,7 @@ public class PIDTurret {
 
     public static double xcoord = 0;
 
-    public static double DeadZone = 5;
+    public static double DeadZone = 20;
 
     double IMU = 0;
 
@@ -25,16 +25,18 @@ public class PIDTurret {
 
     private IMU imu;
 
-    WebCamTest lensCam = new WebCamTest();
+    WebCamTest lensCam;
     DcMotorEx aim = null;
     private double integral;
     private double lastError;
     private long lastTime;
 
+    private double smoothedTargetPos = 0;
 
-    public void init(HardwareMap hardwareMap) {
+
+    public void init(HardwareMap hardwareMap, WebCamTest sharedCam) {
         aim = hardwareMap.get(DcMotorEx.class, "aim");
-        lensCam.init(hardwareMap);
+        this.lensCam = sharedCam;
 
         aim.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         aim.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -61,7 +63,7 @@ public class PIDTurret {
 
         xcoord = lensCam.CamAprilTags("red");
 
-        double Encoder = aim.getCurrentPosition() / 1680;
+        double Encoder = aim.getCurrentPosition() / 6.2222;
         if (xcoord != OldXcoord) {
             imu.resetYaw();
             offset = Encoder;
@@ -71,10 +73,13 @@ public class PIDTurret {
         double TargetPos = (turretWorld + (xcoord * 1.71875) % 360);
         OldXcoord = xcoord;
 
+        double alpha = 0.25;
+        smoothedTargetPos = (alpha * TargetPos) + (1 - alpha) * smoothedTargetPos;
+
 
         if (dt >= 0.01) {
 
-            double error = target - TargetPos;
+            double error = target - smoothedTargetPos;
 
             integral += error * dt;
             double derivative = (error - lastError) / dt;
@@ -86,12 +91,16 @@ public class PIDTurret {
 
             if (Math.abs(error) < Math.abs(DeadZone)) {
                 result = 0;
-            } else if (aim.getCurrentPosition() < -300 && result < 0) {
+                integral = 0;
+            } else if (aim.getCurrentPosition() < -400 && result < 0) {
                 result = 0;
+                integral = 0;
             } else if (aim.getCurrentPosition() > 300 && result > 0) {
                 result = 0;
+                integral = 0;
             } else if (xcoord == 0) {
                 result = 0;
+                integral = 0;
             }
 
             aim.setPower(result);
@@ -99,5 +108,3 @@ public class PIDTurret {
         }
     }
 }
-
-

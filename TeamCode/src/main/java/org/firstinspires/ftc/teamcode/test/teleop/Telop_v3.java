@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurret;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
-@TeleOp(name = "Teleop TeleOpv2", group = "test")
-public class Telop_v2 extends OpMode {
+@TeleOp(name = "Teleop TeleOpv3", group = "test")
+public class Telop_v3 extends OpMode {
     Drive drive = new Drive();
     Intake_transfer intake_transfer = new Intake_transfer();
 
@@ -39,7 +39,7 @@ public class Telop_v2 extends OpMode {
     public static double Ki = 0;
     public static double Kd = 0;
 
-    public static double TKp = 0.023;
+    public static double TKp = 0.03;
     public static double TKi = 0;
     public static double TKd = 0.00085;
 
@@ -80,11 +80,8 @@ public class Telop_v2 extends OpMode {
             intake_transfer.setKicker(gamepad2.right_bumper);
 
             /// Launcher PID control
-            if (gamepad2.a) {
-                targetRPM = targetRPM + 5;
-            } else if (gamepad2.b) {
-                targetRPM = targetRPM - 5;
-            }
+            targetRPM =  -26.9 * sharedCam.CamAprilTagsRange("red") + -1451;
+
            if (gamepad2.left_stick_y > 0.1) {
                 pidShooter.LauncherPID(-targetRPM, Kp, Ki, Kd);
             } else if (gamepad2.left_stick_y < -0.1) {
@@ -97,19 +94,8 @@ public class Telop_v2 extends OpMode {
         PIDTurret.TurretPID(TTarget, TKp, TKi, TKd);
         /// hood controls
 
-       /* if (gamepad2.x && ServoPosition < 1) {
-            ServoPosition = ServoPosition + 0.001;
-        } else if (gamepad2.y && ServoPosition > 0) {
-            ServoPosition = ServoPosition - 0.001;
-        } */
+        hood.setPosition(ServoPosition);
 
-        //hood.setPosition(ServoPosition);
-
-        if (gamepad2.x) {
-            hood.setPosition(hood.getPosition() - 0.0015);
-        } else if (gamepad2.y) {
-            hood.setPosition(hood.getPosition() + 0.0015);
-        }
         /// Sets the speed cap for driver 1.
         if (gamepad1.y) {
             speedCap = "Normal";

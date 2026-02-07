@@ -21,7 +21,7 @@ public class PIDControllerTurret extends OpMode {
     public static double Kp = 0.007;
     public static double Ki = 0.0;
     public static double Kd = 0.0002;
-    public static double target = -12;
+    public static double target = -10;
     public static double result = 0;
 
     public static double TargetPos = 0;
@@ -78,7 +78,7 @@ public class PIDControllerTurret extends OpMode {
         // Target value
         double target = PIDControllerTurret.target;
 
-        double Encoder = aim.getCurrentPosition() / 4.6666;
+        double Encoder = aim.getCurrentPosition() / 6.2222;
         if (xcoord != OldXcoord) {
             imu.resetYaw();
             offset = Encoder;

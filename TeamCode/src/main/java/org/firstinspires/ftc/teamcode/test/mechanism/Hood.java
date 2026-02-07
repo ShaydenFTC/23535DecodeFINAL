@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test.mechanism;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
@@ -10,15 +11,20 @@ public class Hood  {
 
     private Servo CameraMover;
 
-    WebCamTest lensCam = new WebCamTest();
+    WebCamTest lensCam;
+
+    private ElapsedTime timer = new ElapsedTime();
 
 
-    public void init(HardwareMap hardwareMap) {
+    public void init(HardwareMap hardwareMap, WebCamTest sharedCam) {
         hood = hardwareMap.get(Servo.class,"hood");
 
-        lensCam.init(hardwareMap);
+        this.lensCam = sharedCam;
 
         CameraMover = hardwareMap.get(Servo.class, "CameraMover");
+
+        CameraMover.setPosition(0.3);
+        timer.reset();
     }
     public void MoveHood() {
 
@@ -26,11 +32,15 @@ public class Hood  {
 
         double Height = lensCam.CamAprilTagsElevation("red");
 
-        if (Height > 10 && CameraMover.getPosition() < 0.5)  {
-            CameraMover.setPosition(CameraMover.getPosition() + 0.1);
-        } else if (Height < -10 && CameraMover.getPosition() > 0.2) {
-            CameraMover.setPosition(CameraMover.getPosition() - 0.1);
+        if (timer.seconds() > 0.05) {
+            if (Height > 2)  {
+                CameraMover.setPosition(CameraMover.getPosition() - 0.01);
+                timer.reset();
+            } else if (Height < -2) {
+                CameraMover.setPosition(CameraMover.getPosition() + 0.01);
+                timer.reset();
+            }
         }
-        hood.setPosition(-2.74E-04 * size + 0.791);
+        hood.setPosition(5.45E-03 * size + -0.185);
     }
 }

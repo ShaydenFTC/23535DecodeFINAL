@@ -65,7 +65,7 @@ public class RoadRunnerTest extends LinearOpMode {
                         new Pose2d(-12, 50, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
                         new ProfileAccelConstraint(-15, 15))
-                .stopAndAdd(new stopIntake())
+                .stopAndAdd(new stopintake())
                 /// moving to gate
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(0, 53, Math.toRadians(90)), Math.toRadians(90))
@@ -84,7 +84,7 @@ public class RoadRunnerTest extends LinearOpMode {
                         new Pose2d(12, 50, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
                         new ProfileAccelConstraint(-15, 15))
-                .stopAndAdd(new stopIntake())
+                .stopAndAdd(new stopintake())
                 /// moving to shoot
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(45)), Math.toRadians(135))
