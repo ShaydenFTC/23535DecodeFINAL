@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.tests.MecanumDrive;
 import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
 
 
-@Autonomous (name="RoadRunnerTest")
+@Autonomous (name="Auto1")
 public class autoTest1 extends LinearOpMode {
 
     @Override
