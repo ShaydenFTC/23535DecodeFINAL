@@ -94,7 +94,7 @@ public class Telop_v2 extends OpMode {
             }
 
         /// Turret Controls
-        PIDTurret.TurretPID(TTarget, TKp, TKi, TKd);
+       // PIDTurret.TurretPID(TTarget, TKp, TKi, TKd);
         /// hood controls
 
        /* if (gamepad2.x && ServoPosition < 1) {

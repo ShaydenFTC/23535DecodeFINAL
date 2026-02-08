@@ -39,11 +39,11 @@ public class Telop_v3 extends OpMode {
     public static double Ki = 0;
     public static double Kd = 0;
 
-    public static double TKp = 0.03;
+    public static double TKp = 0.008;
     public static double TKi = 0;
-    public static double TKd = 0.00085;
+    public static double TKd = 0.0002;
 
-    public static double TTarget = -6 ;
+    public static double TTarget = -10 ;
     double targetRPM = 0;
 
     double ServoPosition;
@@ -110,7 +110,7 @@ public class Telop_v3 extends OpMode {
         double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives a negative value.
         double lateral =  gamepad1.left_stick_x;
         double yaw     =  gamepad1.right_stick_x;
-        drive.setDriveMotorPower(axial, lateral, yaw, speed_percentage);
+        drive.setDriveMotorPower((axial * 0.65), lateral, yaw, speed_percentage);
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -123,6 +123,7 @@ public class Telop_v3 extends OpMode {
         telemetry.addData("Hood Position", hood.getPosition());
         telemetry.addData("turret position", aim.getCurrentPosition());
         telemetry.addData("AprilTag Range", sharedCam.CamAprilTagsRange("red"));
+        telemetry.addData("xcoord", PIDTurret.xcoord);
 
         telemetry.update();
     }
