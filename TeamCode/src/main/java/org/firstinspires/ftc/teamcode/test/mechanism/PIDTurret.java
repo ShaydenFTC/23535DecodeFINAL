@@ -54,7 +54,7 @@ public class PIDTurret {
 
     }
 
-    public void TurretPID(double target, double Kp, double Ki, double Kd) {
+    public void TurretPID(double target, double Kp, double Ki, double Kd, double OverrideAngle) {
 
         long currentTime = System.currentTimeMillis();
         double dt = (currentTime - lastTime) / 1000.0;
@@ -73,7 +73,13 @@ public class PIDTurret {
 
         if (dt >= 0.01) {
 
+            if (OverrideAngle != 0) {
+                target = OverrideAngle;
+                TargetPos = Encoder;
+            }
+
             double error = target - TargetPos;
+
 
             integral += error * dt;
             double derivative = (error - lastError) / dt;
@@ -83,17 +89,20 @@ public class PIDTurret {
             lastError = error;
             lastTime = currentTime;
 
-            if (Math.abs(error) < Math.abs(DeadZone)) {
-                result = 0;
-                integral = 0;
-            } else if (aim.getCurrentPosition() < -400 && result < 0) {
-                result = 0;
-                integral = 0;
-            } else if (aim.getCurrentPosition() > 300 && result > 0) {
-                result = 0;
-                integral = 0;
-            } else if (xcoord == 0) {
-                result = 0;
+            if (OverrideAngle == 0) {
+
+                if (Math.abs(error) < Math.abs(DeadZone)) {
+                    result = 0;
+                    integral = 0;
+                } else if (aim.getCurrentPosition() < -400 && result < 0) {
+                    result = 0;
+                    integral = 0;
+                } else if (aim.getCurrentPosition() > 300 && result > 0) {
+                    result = 0;
+                    integral = 0;
+                } else if (xcoord == 0) {
+                    result = 0;
+                }
             }
 
             aim.setPower(result);

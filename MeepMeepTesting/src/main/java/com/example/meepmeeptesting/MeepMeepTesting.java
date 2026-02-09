@@ -21,8 +21,45 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-49.5, 49.5, Math.toRadians(305)))
 
-                .splineToSplineHeading(new Pose2d(0, 0, Math.toRadians(315)), Math.toRadians(315))
-                .splineToSplineHeading(new Pose2d(-49.5, 49.5, Math.toRadians(305)), Math.toRadians(105))
+                /// Moving to shooting position
+                .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(315))
+                /// shooting
+                .waitSeconds(3)
+                /// moving to intake area
+                .splineToSplineHeading(new Pose2d(-12, 30, Math.toRadians(90)), Math.toRadians(90))
+                /// intaking
+                //.stopAndAdd(new Intake())
+                .splineToSplineHeading(
+                        new Pose2d(-12, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new TranslationalVelConstraint(15),
+                        new ProfileAccelConstraint(-15, 15))
+                //.stopAndAdd(new stopintake())
+                /// moving to gate
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(0, 53, Math.toRadians(90)), Math.toRadians(90))
+                /// openning gate
+                .waitSeconds(2)
+                /// moving to shoot
+                .setTangent(Math.toRadians(270))
+                .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
+                /// shooting
+                .waitSeconds(3)
+                /// moving to intake
+                .splineToSplineHeading(new Pose2d(12, 30, Math.toRadians(90)), Math.toRadians(90))
+                /// intaking
+                //.stopAndAdd(new Intake())
+                .splineToSplineHeading(
+                        new Pose2d(12, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new TranslationalVelConstraint(15),
+                        new ProfileAccelConstraint(-15, 15))
+                //.stopAndAdd(new stopintake())
+                /// moving to shoot
+                .setTangent(Math.toRadians(270))
+                .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
+                /// shooting
+                .waitSeconds(3)
+                /// moving to gate
+                .splineToLinearHeading(new Pose2d(0, 35, Math.toRadians(90)), Math.toRadians(90))
 
                 .build());
 

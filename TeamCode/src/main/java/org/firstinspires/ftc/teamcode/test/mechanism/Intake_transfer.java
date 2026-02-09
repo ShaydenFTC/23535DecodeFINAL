@@ -48,18 +48,6 @@ public class Intake_transfer {
         back_transfer_servo.setPower(transferMotorPower * Gamepad2power); }
     }
 
-    public void intakeShoot(boolean ButtonPressed) {
-        if (ButtonPressed) {
-        intake.setPower(-1);
-        transfer_motor.setPower(1);
-        back_transfer_servo.setPower(1);
-        } else {
-            intake.setPower(0);
-            transfer_motor.setPower(0);
-            back_transfer_servo.setPower(0);
-        }
-    }
-
     public void setKicker(boolean ButtonPressed) {
         if (ButtonPressed) {
             kicker.setPosition(0.43);
