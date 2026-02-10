@@ -80,7 +80,7 @@ public class Telop_v3 extends OpMode {
             intake_transfer.setKicker(gamepad2.right_bumper);
 
             /// Launcher PID control
-            targetRPM =  -26.9 * sharedCam.CamAprilTagsRange("red") + -1451;
+            targetRPM =  -23.2 * sharedCam.CamAprilTagsRange("red") + -1605;
 
            if (gamepad2.left_stick_y > 0.1) {
                 pidShooter.LauncherPID(-targetRPM, Kp, Ki, Kd);

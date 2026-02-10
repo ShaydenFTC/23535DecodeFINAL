@@ -23,7 +23,7 @@ public class Hood  {
 
         CameraMover = hardwareMap.get(Servo.class, "CameraMover");
 
-        CameraMover.setPosition(0.3);
+        CameraMover.setPosition(0.32);
         timer.reset();
     }
     public void MoveHood() {
@@ -41,6 +41,6 @@ public class Hood  {
                 timer.reset();
             }
         }
-        hood.setPosition(5.45E-03 * size + -0.185);
+        hood.setPosition(7.43E-03 * size + -0.174);
     }
 }

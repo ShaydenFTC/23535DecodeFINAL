@@ -52,6 +52,9 @@ public class Intake_transfer {
         if (ButtonPressed) {
             kicker.setPosition(0.43);
             Kicking = true;
+            intake.setPower(0);
+            transfer_motor.setPower(0);
+            back_transfer_servo.setPower(0);
         } else {
             kicker.setPosition(0.18);
             Kicking = false;

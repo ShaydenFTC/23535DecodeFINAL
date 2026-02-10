@@ -94,16 +94,8 @@ public class Telop_v2 extends OpMode {
             }
 
         /// Turret Controls
-       // PIDTurret.TurretPID(TTarget, TKp, TKi, TKd);
+        PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0.001);
         /// hood controls
-
-       /* if (gamepad2.x && ServoPosition < 1) {
-            ServoPosition = ServoPosition + 0.001;
-        } else if (gamepad2.y && ServoPosition > 0) {
-            ServoPosition = ServoPosition - 0.001;
-        } */
-
-        //hood.setPosition(ServoPosition);
 
         if (gamepad2.x) {
             hood.setPosition(hood.getPosition() - 0.0015);
@@ -117,8 +109,6 @@ public class Telop_v2 extends OpMode {
         } else if (gamepad1.a) {
             speedCap = "Slow";
             speed_percentage = 30.0; }
-
-        Hood.MoveHood();
 
         /// Drivetrain controls.
         double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives a negative value.

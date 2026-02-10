@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.tests.MecanumDrive;
 import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurret;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
+import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
 
 @Autonomous (name="RoadRunnerTest")
@@ -31,15 +32,29 @@ public class RoadRunnerTest extends LinearOpMode {
     PIDshooter pidShooter = new PIDshooter();
 
     PIDTurret PIDTurret = new PIDTurret();
-    /// turret controls
-    public class Turret implements Action {
+
+    WebCamTest sharedCam = new WebCamTest();
+
+    private double shooterTarget = 0;
+    private double turretTarget = 0;
+
+    /// Background actions to maintain PID loops
+    public class TurretAction implements Action {
         @Override
         public boolean run(@NonNull com.acmerobotics.dashboard.telemetry.TelemetryPacket packet) {
-            PIDTurret.TurretPID(0, 0.008, 0, 0.0002, 0.01);
-
+           // PIDTurret.TurretPID(turretTarget, 0.007, 0, 0.0002, 0.001);
             return true;
         }
     }
+
+    public class ShooterAction implements Action {
+        @Override
+        public boolean run(@NonNull com.acmerobotics.dashboard.telemetry.TelemetryPacket packet) {
+            pidShooter.LauncherPID(shooterTarget, 0.005, 0, 0);
+            return true;
+        }
+    }
+
     /// Intake Controls
     public class Intake implements InstantFunction {
         @Override
@@ -75,29 +90,31 @@ public class RoadRunnerTest extends LinearOpMode {
         }
     }
 
-    /// Shooter controls
-
+    /// Shooter target setters
     public class Shoot implements InstantFunction {
         @Override
         public void run() {
-            pidShooter.LauncherPID(-2445, 0.005, 0, 0);
+            shooterTarget = -2200;
         }
     }
 
     public class stopShoot implements InstantFunction {
         @Override
         public void run() {
-            pidShooter.LauncherPID(0, 0.005, 0, 0);
+            shooterTarget = 0;
         }
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-
+        sharedCam.init(hardwareMap);
+        intake.init(hardwareMap);
+        pidShooter.init(hardwareMap);
+        PIDTurret.init(hardwareMap, sharedCam);
 
         /// Set coordinates as starting position and angle as direction robot is facing
-        Pose2d beginPose = new Pose2d(-49.5, 49.5, Math.toRadians(305));
+        Pose2d beginPose = new Pose2d(-53.5, 49.5, Math.toRadians(305));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
@@ -126,7 +143,7 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 /// moving to gate
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(0, 53, Math.toRadians(90)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(0, 56, Math.toRadians(90)), Math.toRadians(90))
                 /// openning gate
                 .waitSeconds(2)
                 /// moving to shoot
@@ -167,9 +184,10 @@ public class RoadRunnerTest extends LinearOpMode {
         .build();
 
         Actions.runBlocking(
-                new com.acmerobotics.roadrunner.ParallelAction(
+                new ParallelAction(
                         path,
-                        new Turret()
+                        new TurretAction(),
+                        new ShooterAction()
                 )
         );
     }

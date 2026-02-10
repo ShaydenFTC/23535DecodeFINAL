@@ -94,10 +94,10 @@ public class PIDTurret {
                 if (Math.abs(error) < Math.abs(DeadZone)) {
                     result = 0;
                     integral = 0;
-                } else if (aim.getCurrentPosition() < -400 && result < 0) {
+                } else if (aim.getCurrentPosition() < -500 && result < 0) {
                     result = 0;
                     integral = 0;
-                } else if (aim.getCurrentPosition() > 300 && result > 0) {
+                } else if (aim.getCurrentPosition() > 400 && result > 0) {
                     result = 0;
                     integral = 0;
                 } else if (xcoord == 0) {
