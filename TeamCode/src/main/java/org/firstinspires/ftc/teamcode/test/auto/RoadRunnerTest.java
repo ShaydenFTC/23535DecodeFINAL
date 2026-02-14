@@ -42,7 +42,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class TurretAction implements Action {
         @Override
         public boolean run(@NonNull com.acmerobotics.dashboard.telemetry.TelemetryPacket packet) {
-           // PIDTurret.TurretPID(turretTarget, 0.007, 0, 0.0002, 0.001);
+            PIDTurret.TurretPID(turretTarget, 0.007, 0, 0.0002, 0.001);
             return true;
         }
     }
@@ -59,7 +59,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class Intake implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(1,1);
+            intake.intake(0.7,0.7);
         }
     }
 
@@ -73,7 +73,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class IntakeShoot implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(0.5,0.5);
+            intake.intake(1,1);
         }
     }
     /// kicker
@@ -94,7 +94,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class Shoot implements InstantFunction {
         @Override
         public void run() {
-            shooterTarget = -2200;
+            shooterTarget = -2350;
         }
     }
 
@@ -125,59 +125,75 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new Shoot())
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(315))
                 /// shooting
+                .waitSeconds(0.5)
                 .stopAndAdd(new IntakeShoot())
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
+                .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .stopAndAdd(new kickerDown())
+                .waitSeconds(1)
+                .stopAndAdd(new kickerUp())
+                .waitSeconds(0.5)
+                .stopAndAdd(new kickerDown())
+
                 .stopAndAdd(new stopShoot())
                 /// moving to intake area
                 .splineToSplineHeading(new Pose2d(-12, 30, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
                 .stopAndAdd(new Intake())
                 .splineToSplineHeading(
-                        new Pose2d(-12, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(-12, 55, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-15, 15))
+                        new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new stopIntake())
-                /// moving to gate
-                .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(0, 56, Math.toRadians(90)), Math.toRadians(90))
-                /// openning gate
-                .waitSeconds(2)
                 /// moving to shoot
                 .stopAndAdd(new Shoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
                 /// shooting
+                .waitSeconds(0.5)
                 .stopAndAdd(new IntakeShoot())
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
+                .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .stopAndAdd(new kickerDown())
+                .waitSeconds(1)
+                .stopAndAdd(new kickerUp())
+                .waitSeconds(0.5)
+                .stopAndAdd(new kickerDown())
+
                 .stopAndAdd(new stopShoot())
                 /// moving to intake
                 .splineToSplineHeading(new Pose2d(12, 30, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
                 .stopAndAdd(new Intake())
                 .splineToSplineHeading(
-                        new Pose2d(12, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(12, 55, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-15, 15))
+                        new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
                 .stopAndAdd(new Shoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
                 /// shooting
+                .waitSeconds(0.5)
                 .stopAndAdd(new IntakeShoot())
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
+                .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1.5)
+                .waitSeconds(1)
                 .stopAndAdd(new kickerDown())
+                .waitSeconds(1)
+                .stopAndAdd(new kickerUp())
+                .waitSeconds(0.5)
+                .stopAndAdd(new kickerDown())
+
                 .stopAndAdd(new stopShoot())
                 /// moving to gate
                 .splineToLinearHeading(new Pose2d(0, 35, Math.toRadians(90)), Math.toRadians(90))

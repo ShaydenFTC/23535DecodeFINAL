@@ -11,7 +11,6 @@ public class Intake_transfer {
     private DcMotorEx transfer_motor = null;
     private Servo kicker = null;
 
-    private CRServo back_transfer_servo;
 
     private double intakePower = 1.0;
 
@@ -36,8 +35,6 @@ public class Intake_transfer {
 
         kicker.setDirection(Servo.Direction.FORWARD);
 
-        back_transfer_servo = hardwareMap.get(CRServo.class,"back_transfer_servo");
-
 
     }
 
@@ -45,7 +42,7 @@ public class Intake_transfer {
         if (!Kicking) {
         intake.setPower(-intakePower * Gamepad1power);
         transfer_motor.setPower(transferMotorPower * Gamepad2power);
-        back_transfer_servo.setPower(transferMotorPower * Gamepad2power); }
+        }
     }
 
     public void setKicker(boolean ButtonPressed) {
@@ -54,7 +51,6 @@ public class Intake_transfer {
             Kicking = true;
             intake.setPower(0);
             transfer_motor.setPower(0);
-            back_transfer_servo.setPower(0);
         } else {
             kicker.setPosition(0.18);
             Kicking = false;
