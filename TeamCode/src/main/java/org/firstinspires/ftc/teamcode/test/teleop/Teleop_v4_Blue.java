@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurretBlue;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
-@TeleOp(name = "Teleop TeleOpv3 Blue", group = "test")
+@TeleOp(name = "Teleop TeleOpv4 Blue", group = "test")
 public class Teleop_v4_Blue extends OpMode {
     Drive drive = new Drive();
     Intake_transfer intake_transfer = new Intake_transfer();
@@ -39,14 +39,16 @@ public class Teleop_v4_Blue extends OpMode {
     public static double Ki = 0;
     public static double Kd = 0;
 
-    public static double TKp = 0.03;
+    public static double TKp = 0.008;
     public static double TKi = 0;
-    public static double TKd = 0.00085;
+    public static double TKd = 0.0002;
 
-    public static double TTarget = -6 ;
+    public static double TTarget = -10 ;
     double targetRPM = 0;
 
     double ServoPosition;
+
+    boolean auto = true;
 
     @Override
     public void init() {
@@ -70,6 +72,12 @@ public class Teleop_v4_Blue extends OpMode {
     }
     @Override
     public void loop() {
+
+        if (gamepad2.x) {
+            auto = false;
+        } else if (gamepad2.y) {
+            auto = true;
+        }
         double g1Intake = gamepad1.right_trigger - gamepad1.left_trigger;
         double g2Intake = gamepad2.right_trigger - gamepad2.left_trigger;
 
@@ -80,7 +88,11 @@ public class Teleop_v4_Blue extends OpMode {
         intake_transfer.setKicker(gamepad2.right_bumper);
 
         /// Launcher PID control
-        targetRPM =  -26.9 * sharedCam.CamAprilTagsRange("blue") + -1451;
+        if (auto) {
+            targetRPM =  -23.2 * sharedCam.CamAprilTagsRange("blue") + -1605;
+        } else if (!auto) {
+            targetRPM = -2200;
+        }
 
         if (gamepad2.left_stick_y > 0.1) {
             pidShooter.LauncherPID(-targetRPM, Kp, Ki, Kd);
@@ -91,10 +103,17 @@ public class Teleop_v4_Blue extends OpMode {
         }
 
         /// Turret Controls
-        PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0);
+        if (auto) {
+            PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0);
+        } else if (!auto) {
+            PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0.01);
+        }
         /// hood controls
-
-        hood.setPosition(ServoPosition);
+        if (auto) {
+            Hood.MoveHood();
+        } else if (!auto) {
+            hood.setPosition(0);
+        }
 
         /// Sets the speed cap for driver 1.
         if (gamepad1.y) {
@@ -104,13 +123,12 @@ public class Teleop_v4_Blue extends OpMode {
             speedCap = "Slow";
             speed_percentage = 30.0; }
 
-        Hood.MoveHood();
 
         /// Drivetrain controls.
         double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives a negative value.
         double lateral =  gamepad1.left_stick_x;
         double yaw     =  gamepad1.right_stick_x;
-        drive.setDriveMotorPower(axial, lateral, yaw, speed_percentage);
+        drive.setDriveMotorPower((axial * 0.65), lateral, yaw, speed_percentage);
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -122,7 +140,8 @@ public class Teleop_v4_Blue extends OpMode {
         telemetry.addData("Actual RPM", pidShooter.getRPM());
         telemetry.addData("Hood Position", hood.getPosition());
         telemetry.addData("turret position", aim.getCurrentPosition());
-        telemetry.addData("AprilTag Range", sharedCam.CamAprilTagsRange("red"));
+        telemetry.addData("AprilTag Range", sharedCam.CamAprilTagsRange("blue"));
+        telemetry.addData("xcoord", PIDTurret.xcoord);
 
         telemetry.update();
     }

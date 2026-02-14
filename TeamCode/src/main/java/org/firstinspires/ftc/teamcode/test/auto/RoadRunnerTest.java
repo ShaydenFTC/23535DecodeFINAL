@@ -59,7 +59,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class Intake implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(0.7,0.7);
+            intake.intake(0.75,0.75);
         }
     }
 
@@ -74,6 +74,12 @@ public class RoadRunnerTest extends LinearOpMode {
         @Override
         public void run() {
             intake.intake(1,1);
+        }
+    }
+    public class ReverseIntake implements InstantFunction {
+        @Override
+        public void run() {
+            intake.intake(0,-1);
         }
     }
     /// kicker
@@ -94,7 +100,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class Shoot implements InstantFunction {
         @Override
         public void run() {
-            shooterTarget = -2350;
+            shooterTarget = -2300;
         }
     }
 
@@ -131,11 +137,7 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerDown())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
@@ -149,9 +151,11 @@ public class RoadRunnerTest extends LinearOpMode {
                         new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
+                .stopAndAdd(new ReverseIntake())
                 .stopAndAdd(new Shoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
+                .stopAndAdd(new stopIntake())
                 /// shooting
                 .waitSeconds(0.5)
                 .stopAndAdd(new IntakeShoot())
@@ -159,11 +163,7 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerDown())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
@@ -177,9 +177,11 @@ public class RoadRunnerTest extends LinearOpMode {
                         new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
+                .stopAndAdd(new ReverseIntake())
                 .stopAndAdd(new Shoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
+                .stopAndAdd(new stopIntake())
                 /// shooting
                 .waitSeconds(0.5)
                 .stopAndAdd(new IntakeShoot())
@@ -187,11 +189,7 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerDown())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
