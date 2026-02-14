@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.test.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,10 +10,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.test.mechanism.Drive;
 import org.firstinspires.ftc.teamcode.test.mechanism.Hood;
 import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
-import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurretBlue;
+import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurret;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
+@Disabled
 @TeleOp(name = "Teleop TeleOpv3 Blue", group = "test")
 public class Telop_v3_Blue extends OpMode {
     Drive drive = new Drive();
@@ -22,7 +24,7 @@ public class Telop_v3_Blue extends OpMode {
 
     PIDshooter pidShooter = new PIDshooter();
 
-    PIDTurretBlue PIDTurret = new PIDTurretBlue();
+    PIDTurret PIDTurret = new PIDTurret();
 
     WebCamTest sharedCam = new WebCamTest();
 
@@ -39,7 +41,7 @@ public class Telop_v3_Blue extends OpMode {
     public static double Ki = 0;
     public static double Kd = 0;
 
-    public static double TKp = 0.03;
+    public static double TKp = 0.023;
     public static double TKi = 0;
     public static double TKd = 0.00085;
 
@@ -74,24 +76,24 @@ public class Telop_v3_Blue extends OpMode {
         double g2Intake = gamepad2.right_trigger - gamepad2.left_trigger;
 
 
-        /// Intake and transfer controls
-        intake_transfer.intake(g1Intake, g2Intake);
+            /// Intake and transfer controls
+            intake_transfer.intake(g1Intake, g2Intake);
 
-        intake_transfer.setKicker(gamepad2.right_bumper);
+            intake_transfer.setKicker(gamepad2.right_bumper);
 
-        /// Launcher PID control
-        targetRPM =  -26.9 * sharedCam.CamAprilTagsRange("red") + -1451;
+            /// Launcher PID control
+            targetRPM =  -23.2 * sharedCam.CamAprilTagsRange("blue") + -1605;
 
-        if (gamepad2.left_stick_y > 0.1) {
-            pidShooter.LauncherPID(-targetRPM, Kp, Ki, Kd);
-        } else if (gamepad2.left_stick_y < -0.1) {
-            pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
-        } else {
-            pidShooter.LauncherPID(0, Kp, Ki, Kd);
-        }
+           if (gamepad2.left_stick_y > 0.1) {
+                pidShooter.LauncherPID(-targetRPM, Kp, Ki, Kd);
+            } else if (gamepad2.left_stick_y < -0.1) {
+                pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
+            } else {
+                pidShooter.LauncherPID(0, Kp, Ki, Kd);
+            }
 
         /// Turret Controls
-        PIDTurret.TurretPID(TTarget, TKp, TKi, TKd);
+        PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0.001);
         /// hood controls
 
         hood.setPosition(ServoPosition);
