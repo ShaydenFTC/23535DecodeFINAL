@@ -35,7 +35,7 @@ public class Teleop_v4_Red extends OpMode {
     double speed_percentage = 100.0;
 
     // PID constants from PIDControllerShooter
-    public static double Kp = 0.005;
+    public static double Kp = 0.0075;
     public static double Ki = 0;
     public static double Kd = 0;
 
@@ -105,7 +105,7 @@ public class Teleop_v4_Red extends OpMode {
         /// Turret Controls
         if (auto && Math.abs(gamepad2.left_stick_y) > 0.1){
             PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0);
-        } else if (!auto) {
+        } else if (!auto || Math.abs(gamepad2.left_stick_y) < 0.1) {
             PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0.01);
         }
         /// hood controls

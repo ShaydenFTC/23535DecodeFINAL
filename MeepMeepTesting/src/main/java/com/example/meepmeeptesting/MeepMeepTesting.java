@@ -19,25 +19,24 @@ public class MeepMeepTesting {
                 .setConstraints(55, 55, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 15, Math.toRadians(180)))
-                /// Moving to shooting position
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-55, 10, Math.toRadians(290)), Math.toRadians(180))
-                /// shooting
-                .waitSeconds(3)
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 15, Math.toRadians(0)))
+
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(48, 17, Math.toRadians(345)), Math.toRadians(180))
+                .waitSeconds(6)
                 /// moving to intake area
-                .setTangent(Math.toRadians(0))
+                .setReversed(true)
                 .splineToSplineHeading(new Pose2d(34, 35, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
                 .splineToSplineHeading(
-                        new Pose2d(36, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(34, 55, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
                         new ProfileAccelConstraint(-15, 15))
-                /// moving to shoot
-                .setTangent(Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(-55, 10, Math.toRadians(290)), Math.toRadians(180))
-                /// shooting
-                .waitSeconds(3)
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(48, 17, Math.toRadians(345)), Math.toRadians(0))
+                .waitSeconds(6)
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(40, 17, Math.toRadians(345)), Math.toRadians(0))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)

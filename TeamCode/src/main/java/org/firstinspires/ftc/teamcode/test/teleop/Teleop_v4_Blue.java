@@ -35,7 +35,7 @@ public class Teleop_v4_Blue extends OpMode {
     double speed_percentage = 100.0;
 
     // PID constants from PIDControllerShooter
-    public static double Kp = 0.005;
+    public static double Kp = 0.0075;
     public static double Ki = 0;
     public static double Kd = 0;
 
