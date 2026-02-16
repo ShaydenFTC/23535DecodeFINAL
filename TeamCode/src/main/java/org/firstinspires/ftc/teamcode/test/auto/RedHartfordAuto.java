@@ -19,7 +19,6 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import org.firstinspires.ftc.teamcode.roadrunner.tests.MecanumDrive;
 import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurret;
-import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurretRed;
 import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
@@ -32,7 +31,7 @@ public class RedHartfordAuto extends LinearOpMode {
 
     PIDshooter pidShooter = new PIDshooter();
 
-    PIDTurretRed PIDTurret = new PIDTurretRed();
+    PIDTurret PIDTurret = new PIDTurret();
 
     WebCamTest sharedCam = new WebCamTest();
 
@@ -60,7 +59,7 @@ public class RedHartfordAuto extends LinearOpMode {
     public class Intake implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(0.7,0.7);
+            intake.intake(0.75,0.75);
         }
     }
 
@@ -75,6 +74,12 @@ public class RedHartfordAuto extends LinearOpMode {
         @Override
         public void run() {
             intake.intake(1,1);
+        }
+    }
+    public class ReverseIntake implements InstantFunction {
+        @Override
+        public void run() {
+            intake.intake(0.5,-1);
         }
     }
     /// kicker
@@ -106,6 +111,13 @@ public class RedHartfordAuto extends LinearOpMode {
         }
     }
 
+    public class ReverseShoot implements InstantFunction {
+        @Override
+        public void run() {
+            shooterTarget = 1000;
+        }
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -132,11 +144,7 @@ public class RedHartfordAuto extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 .waitSeconds(0.1)
                 .stopAndAdd(new kickerUp())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerDown())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
@@ -150,55 +158,53 @@ public class RedHartfordAuto extends LinearOpMode {
                         new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
-                .stopAndAdd(new Shoot())
+                .stopAndAdd(new ReverseIntake())
+                .stopAndAdd(new ReverseShoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
+                .stopAndAdd(new stopIntake())
+                .stopAndAdd(new Shoot())
                 /// shooting
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new IntakeShoot())
                 .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
-                .waitSeconds(0.1)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerDown())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerUp())
                 .waitSeconds(0.5)
+                .stopAndAdd(new kickerUp())
+                .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
                 /// moving to intake
-                .splineToSplineHeading(new Pose2d(12, 30, Math.toRadians(90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(8, 30, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
                 .stopAndAdd(new Intake())
                 .splineToSplineHeading(
-                        new Pose2d(12, 55, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(8, 55, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
                         new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
-                .stopAndAdd(new Shoot())
+                .stopAndAdd(new ReverseIntake())
+                .stopAndAdd(new ReverseShoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
+                .stopAndAdd(new stopIntake())
+                .stopAndAdd(new Shoot())
                 /// shooting
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new IntakeShoot())
                 .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
-                .waitSeconds(0.1)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerDown())
-                .waitSeconds(1)
-                .stopAndAdd(new kickerUp())
                 .waitSeconds(0.5)
+                .stopAndAdd(new kickerUp())
+                .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
                 /// moving to gate
                 .splineToLinearHeading(new Pose2d(0, 35, Math.toRadians(90)), Math.toRadians(90))
-        .build();
+                .build();
 
         Actions.runBlocking(
                 new ParallelAction(

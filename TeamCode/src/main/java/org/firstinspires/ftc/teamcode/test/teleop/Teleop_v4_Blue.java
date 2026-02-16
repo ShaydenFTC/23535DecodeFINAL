@@ -88,7 +88,7 @@ public class Teleop_v4_Blue extends OpMode {
         intake_transfer.setKicker(gamepad2.right_bumper);
 
         /// Launcher PID control
-        if (auto) {
+        if (auto && Math.abs(gamepad2.left_stick_y) > 0.1) {
             targetRPM =  -23.2 * sharedCam.CamAprilTagsRange("blue") + -1605;
         } else if (!auto) {
             targetRPM = -2200;
@@ -128,7 +128,7 @@ public class Teleop_v4_Blue extends OpMode {
         double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives a negative value.
         double lateral =  gamepad1.left_stick_x;
         double yaw     =  gamepad1.right_stick_x;
-        drive.setDriveMotorPower((axial * 0.65), lateral, yaw, speed_percentage);
+        drive.setDriveMotorPower((axial), lateral, yaw, speed_percentage);
 
         telemetry.setMsTransmissionInterval(50);
 

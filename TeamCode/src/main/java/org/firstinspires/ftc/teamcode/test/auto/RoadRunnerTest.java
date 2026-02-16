@@ -79,7 +79,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class ReverseIntake implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(0,-1);
+            intake.intake(0.5,-1);
         }
     }
     /// kicker
@@ -100,7 +100,7 @@ public class RoadRunnerTest extends LinearOpMode {
     public class Shoot implements InstantFunction {
         @Override
         public void run() {
-            shooterTarget = -2300;
+            shooterTarget = -2350;
         }
     }
 
@@ -108,6 +108,13 @@ public class RoadRunnerTest extends LinearOpMode {
         @Override
         public void run() {
             shooterTarget = 0;
+        }
+    }
+
+    public class ReverseShoot implements InstantFunction {
+        @Override
+        public void run() {
+            shooterTarget = 1000;
         }
     }
 
@@ -152,16 +159,17 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
                 .stopAndAdd(new ReverseIntake())
-                .stopAndAdd(new Shoot())
+                .stopAndAdd(new ReverseShoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
                 .stopAndAdd(new stopIntake())
+                .stopAndAdd(new Shoot())
                 /// shooting
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new IntakeShoot())
                 .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
-                .waitSeconds(0.1)
+                .waitSeconds(0.5)
                 .stopAndAdd(new kickerUp())
                 .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())
@@ -178,16 +186,17 @@ public class RoadRunnerTest extends LinearOpMode {
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
                 .stopAndAdd(new ReverseIntake())
-                .stopAndAdd(new Shoot())
+                .stopAndAdd(new ReverseShoot())
                 .setTangent(Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(-35, 35, Math.toRadians(315)), Math.toRadians(135))
                 .stopAndAdd(new stopIntake())
+                .stopAndAdd(new Shoot())
                 /// shooting
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(new IntakeShoot())
                 .waitSeconds(1)
                 .stopAndAdd(new stopIntake())
-                .waitSeconds(0.1)
+                .waitSeconds(0.5)
                 .stopAndAdd(new kickerUp())
                 .waitSeconds(1.5)
                 .stopAndAdd(new kickerDown())

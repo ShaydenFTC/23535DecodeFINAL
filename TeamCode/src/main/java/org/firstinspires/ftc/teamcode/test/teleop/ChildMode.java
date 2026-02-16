@@ -1,0 +1,121 @@
+package org.firstinspires.ftc.teamcode.test.teleop;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.test.mechanism.Drive;
+import org.firstinspires.ftc.teamcode.test.mechanism.Hood;
+import org.firstinspires.ftc.teamcode.test.mechanism.Intake_transfer;
+import org.firstinspires.ftc.teamcode.test.mechanism.PIDTurret;
+import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
+import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
+
+@TeleOp(name = "ChildMode", group = "test")
+public class ChildMode extends OpMode {
+    Drive drive = new Drive();
+    Intake_transfer intake_transfer = new Intake_transfer();
+
+    Hood Hood = new Hood();
+
+    PIDshooter pidShooter = new PIDshooter();
+
+    PIDTurret PIDTurret = new PIDTurret();
+
+    WebCamTest sharedCam = new WebCamTest();
+
+    private Servo hood = null;
+
+    DcMotorEx aim = null;
+
+    private final ElapsedTime runtime = new ElapsedTime();
+    String speedCap = "Normal";
+    double speed_percentage = 50;
+
+    // PID constants from PIDControllerShooter
+    public static double Kp = 0.005;
+    public static double Ki = 0;
+    public static double Kd = 0;
+
+    public static double TKp = 0.008;
+    public static double TKi = 0;
+    public static double TKd = 0.0002;
+
+    public static double TTarget = -10 ;
+    double targetRPM = 0;
+
+    double ServoPosition;
+
+    boolean auto = true;
+
+    @Override
+    public void init() {
+        runtime.reset();
+
+        sharedCam.init(hardwareMap);
+
+        drive.init(hardwareMap);
+        intake_transfer.init(hardwareMap);
+        pidShooter.init(hardwareMap);
+        PIDTurret.init(hardwareMap, sharedCam);
+        Hood.init(hardwareMap, sharedCam);
+
+        aim = hardwareMap.get(DcMotorEx.class, "aim");
+        aim.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        aim.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        aim.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+
+        hood = hardwareMap.get(Servo.class,"hood");
+
+    }
+    @Override
+    public void loop() {
+
+
+
+            /// Intake and transfer controls
+            if (gamepad1.right_bumper) {
+            intake_transfer.intake(0.75, 0.75);
+            } else if (gamepad1.left_bumper) {
+                intake_transfer.intake(-0.75, -0.75);
+            } else {
+                intake_transfer.intake(0, 0);
+            }
+
+            intake_transfer.setKicker(gamepad1.a);
+
+            /// Launcher PID control
+
+               targetRPM = 0;
+    /// -23.2 * sharedCam.CamAprilTagsRange("red") + -1605;
+
+        /*if (gamepad1.right_trigger > 0.1) {
+                pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
+            } else if (gamepad1.right_bumper) {
+                pidShooter.LauncherPID(0, Kp, Ki, Kd);
+            } else {
+                pidShooter.LauncherPID(0, Kp, Ki, Kd);
+            } */
+
+        /// Turret Controls
+
+            PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0.01);
+
+        /// hood controls
+
+        Hood.MoveHood();
+
+
+        /// Drivetrain controls.
+        double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives a negative value.
+        double lateral =  gamepad1.left_stick_x;
+        double yaw     =  gamepad1.right_stick_x;
+        drive.setDriveMotorPower((axial * 0.65), lateral, yaw, speed_percentage);
+
+        telemetry.setMsTransmissionInterval(50);
+
+        telemetry.update();
+    }
+}

@@ -15,7 +15,7 @@ public class PIDTurretRed {
 
     public static double xcoord = 0;
 
-    public static double DeadZone = 20;
+    public static double DeadZone = 1;
 
     double IMU = 0;
 
@@ -30,8 +30,6 @@ public class PIDTurretRed {
     private double integral;
     private double lastError;
     private long lastTime;
-
-    private double smoothedTargetPos = 0;
 
 
     public void init(HardwareMap hardwareMap, WebCamTest sharedCam) {
@@ -64,7 +62,7 @@ public class PIDTurretRed {
         xcoord = lensCam.CamAprilTags("red");
 
         double Encoder = aim.getCurrentPosition() / 6.2222;
-        if (xcoord != OldXcoord) {
+        if (xcoord != OldXcoord && xcoord != 0) {
             imu.resetYaw();
             offset = Encoder;
         }
@@ -73,18 +71,15 @@ public class PIDTurretRed {
         double TargetPos = (turretWorld + (xcoord * 1.71875) % 360);
         OldXcoord = xcoord;
 
-        double alpha = 0.25;
-        smoothedTargetPos = (alpha * TargetPos) + (1 - alpha) * smoothedTargetPos;
-
-
         if (dt >= 0.01) {
 
             if (OverrideAngle != 0) {
                 target = OverrideAngle;
-                smoothedTargetPos = Encoder;
+                TargetPos = Encoder;
             }
 
-            double error = target - smoothedTargetPos;
+            double error = target - TargetPos;
+
 
             integral += error * dt;
             double derivative = (error - lastError) / dt;
@@ -95,30 +90,29 @@ public class PIDTurretRed {
             lastTime = currentTime;
 
             if (OverrideAngle == 0) {
+
                 if (Math.abs(error) < Math.abs(DeadZone)) {
                     result = 0;
                     integral = 0;
-                } else if (aim.getCurrentPosition() < -400 && result < 0) {
+                } else if (aim.getCurrentPosition() < -500 && result < 0) {
                     result = 0;
                     integral = 0;
-                } else if (aim.getCurrentPosition() > 300 && result > 0) {
+                } else if (aim.getCurrentPosition() > 400 && result > 0) {
                     result = 0;
                     integral = 0;
                 } else if (xcoord == 0) {
                     result = 0;
-                    integral = 0;
                 }
             } else {
                 if (Math.abs(error) < Math.abs(DeadZone)) {
                     result = 0;
                     integral = 0;
-                } else if (aim.getCurrentPosition() < -400 && result < 0) {
+                } else if (aim.getCurrentPosition() < -500 && result < 0) {
                     result = 0;
                     integral = 0;
-                } else if (aim.getCurrentPosition() > 300 && result > 0) {
+                } else if (aim.getCurrentPosition() > 400 && result > 0) {
                     result = 0;
-                    integral = 0;
-                }
+                    integral = 0; }
             }
 
             aim.setPower(result);
@@ -126,3 +120,4 @@ public class PIDTurretRed {
         }
     }
 }
+

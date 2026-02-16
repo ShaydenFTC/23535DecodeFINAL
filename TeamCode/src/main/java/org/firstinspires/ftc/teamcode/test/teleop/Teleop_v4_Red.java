@@ -103,7 +103,7 @@ public class Teleop_v4_Red extends OpMode {
         }
 
         /// Turret Controls
-        if (auto) {
+        if (auto && Math.abs(gamepad2.left_stick_y) > 0.1){
             PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0);
         } else if (!auto) {
             PIDTurret.TurretPID(TTarget, TKp, TKi, TKd, 0.01);
@@ -128,7 +128,7 @@ public class Teleop_v4_Red extends OpMode {
         double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives a negative value.
         double lateral =  gamepad1.left_stick_x;
         double yaw     =  gamepad1.right_stick_x;
-        drive.setDriveMotorPower((axial * 0.65), lateral, yaw, speed_percentage);
+        drive.setDriveMotorPower((axial), lateral, yaw, speed_percentage);
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -139,7 +139,7 @@ public class Teleop_v4_Red extends OpMode {
         telemetry.addData("Target RPM", targetRPM);
         telemetry.addData("Actual RPM", pidShooter.getRPM());
         telemetry.addData("Hood Position", hood.getPosition());
-        telemetry.addData("turret position", aim.getCurrentPosition());
+        telemetry.addData("AprilTag Range", sharedCam.CamAprilTagsElevation("red"));
         telemetry.addData("AprilTag Range", sharedCam.CamAprilTagsRange("red"));
         telemetry.addData("xcoord", PIDTurret.xcoord);
 

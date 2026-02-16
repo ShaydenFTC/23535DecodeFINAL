@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.test.mechanism.PIDshooter;
 import org.firstinspires.ftc.teamcode.test.testing.WebCamTest;
 
 
-@Autonomous (name="BlueHartfordAuto")
-public class BlueHartfordAuto extends LinearOpMode {
+@Autonomous (name="FarRedHartfordAuto")
+public class FarRedHartfordAuto extends LinearOpMode {
 
 
     Intake_transfer intake = new Intake_transfer();
@@ -100,7 +100,7 @@ public class BlueHartfordAuto extends LinearOpMode {
     public class Shoot implements InstantFunction {
         @Override
         public void run() {
-            shooterTarget = -2350;
+            shooterTarget = -2650;
         }
     }
 
@@ -127,8 +127,7 @@ public class BlueHartfordAuto extends LinearOpMode {
         PIDTurret.init(hardwareMap, sharedCam);
 
         /// Set coordinates as starting position and angle as direction robot is facing
-        // Mirrored beginPose: y is negated, heading is mirrored
-        Pose2d beginPose = new Pose2d(-53.5, -49.5, Math.toRadians(55));
+        Pose2d beginPose = new Pose2d(54, 5, Math.toRadians(180));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
@@ -137,7 +136,8 @@ public class BlueHartfordAuto extends LinearOpMode {
         Action path = drive.actionBuilder(beginPose)
                 /// Moving to shooting position
                 .stopAndAdd(new Shoot())
-                .splineToSplineHeading(new Pose2d(-35, -35, Math.toRadians(45)), Math.toRadians(45))
+                .setTangent(Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-55, 10, Math.toRadians(290)), Math.toRadians(180))
                 /// shooting
                 .waitSeconds(0.5)
                 .stopAndAdd(new IntakeShoot())
@@ -150,19 +150,20 @@ public class BlueHartfordAuto extends LinearOpMode {
 
                 .stopAndAdd(new stopShoot())
                 /// moving to intake area
-                .splineToSplineHeading(new Pose2d(-12, -30, Math.toRadians(270)), Math.toRadians(270))
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(23, 30, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
                 .stopAndAdd(new Intake())
                 .splineToSplineHeading(
-                        new Pose2d(-12, -55, Math.toRadians(270)), Math.toRadians(270),
+                        new Pose2d(23 , 50, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-30, 30))
+                        new ProfileAccelConstraint(-15, 15))
                 .stopAndAdd(new stopIntake())
                 /// moving to shoot
                 .stopAndAdd(new ReverseIntake())
                 .stopAndAdd(new ReverseShoot())
-                .setTangent(Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(-35, -35, Math.toRadians(45)), Math.toRadians(225))
+                .setTangent(Math.toRadians(270))
+                .splineToSplineHeading(new Pose2d(-55, 10, Math.toRadians(290)), Math.toRadians(180))
                 .stopAndAdd(new stopIntake())
                 .stopAndAdd(new Shoot())
                 /// shooting
@@ -176,35 +177,6 @@ public class BlueHartfordAuto extends LinearOpMode {
                 .stopAndAdd(new kickerDown())
 
                 .stopAndAdd(new stopShoot())
-                /// moving to intake
-                .splineToSplineHeading(new Pose2d(8, -30, Math.toRadians(270)), Math.toRadians(270))
-                /// intaking
-                .stopAndAdd(new Intake())
-                .splineToSplineHeading(
-                        new Pose2d(8, -55, Math.toRadians(270)), Math.toRadians(270),
-                        new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-30, 30))
-                .stopAndAdd(new stopIntake())
-                /// moving to shoot
-                .stopAndAdd(new ReverseIntake())
-                .stopAndAdd(new ReverseShoot())
-                .setTangent(Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(-35, -35, Math.toRadians(45)), Math.toRadians(225))
-                .stopAndAdd(new stopIntake())
-                .stopAndAdd(new Shoot())
-                /// shooting
-                .waitSeconds(1.5)
-                .stopAndAdd(new IntakeShoot())
-                .waitSeconds(1)
-                .stopAndAdd(new stopIntake())
-                .waitSeconds(0.5)
-                .stopAndAdd(new kickerUp())
-                .waitSeconds(1.5)
-                .stopAndAdd(new kickerDown())
-
-                .stopAndAdd(new stopShoot())
-                /// moving to gate
-                .splineToLinearHeading(new Pose2d(0, -35, Math.toRadians(270)), Math.toRadians(270))
                 .build();
 
         Actions.runBlocking(
