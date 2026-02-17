@@ -94,10 +94,10 @@ public class Teleop_v4_Blue extends OpMode {
             targetRPM = -2200;
         }
 
-        if (gamepad2.left_stick_y > 0.1) {
-            pidShooter.LauncherPID(-targetRPM, Kp, Ki, Kd);
-        } else if (gamepad2.left_stick_y < -0.1) {
+        if (gamepad2.left_stick_y < -0.1) {
             pidShooter.LauncherPID(targetRPM, Kp, Ki, Kd);
+        } else if ((gamepad2.left_stick_y > 0.1 || Math.abs(g2Intake) > 0.1) && !(gamepad2.left_stick_y < -0.1)) {
+            pidShooter.LauncherPID(1000, Kp, Ki, Kd);
         } else {
             pidShooter.LauncherPID(0, Kp, Ki, Kd);
         }
