@@ -16,59 +16,27 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(65, 65, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(55, 55, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-49.5, 49.5, Math.toRadians(305)))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 15, Math.toRadians(0)))
 
-                /// Moving to shooting position
-                .splineToSplineHeading(new Pose2d(-25, 25, Math.toRadians(315)), Math.toRadians(315))
-                /// shooting
-                .waitSeconds(1.75)
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(48, 17, Math.toRadians(345)), Math.toRadians(180))
+                .waitSeconds(6)
                 /// moving to intake area
-                .splineToSplineHeading(new Pose2d(-12, 30, Math.toRadians(90)), Math.toRadians(90))
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(34, 35, Math.toRadians(90)), Math.toRadians(90))
                 /// intaking
-                //.stopAndAdd(new Intake())
                 .splineToSplineHeading(
-                        new Pose2d(-12, 50, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(34, 55, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-55, 55))
-                //.stopAndAdd(new stopintake())
-                /// moving to gate
-                .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(0, 53, Math.toRadians(90)), Math.toRadians(90))
-                /// openning gate
-                .waitSeconds(1.5)
-                /// moving to shoot
-                .setTangent(Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(-30, 30, Math.toRadians(315)), Math.toRadians(135))
-                /// shooting
-                .waitSeconds(1.75)
-                /// moving to intake
-                .splineToSplineHeading(new Pose2d(12, 30, Math.toRadians(90)), Math.toRadians(90))
-                /// intaking
-                //.stopAndAdd(new Intake())
-                .splineToSplineHeading(
-                        new Pose2d(12, 50, Math.toRadians(90)), Math.toRadians(90),
-                        new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-55, 55))
-                //.stopAndAdd(new stopintake())
-                /// moving to shoot
-                .setTangent(Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(-25, 25, Math.toRadians(315)), Math.toRadians(135))
-                /// shooting
-                .waitSeconds(1.75)
-                /// moving to intake 3rd
-                .splineToSplineHeading(new Pose2d(35, 30, Math.toRadians(90)), Math.toRadians(90))
-                .splineToSplineHeading(
-                        new Pose2d(35, 50, Math.toRadians(90)), Math.toRadians(90),
-                        new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-45, 45))
-                .setTangent(Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(-25, 25, Math.toRadians(315)), Math.toRadians(135))
-                /// shooting
-                .waitSeconds(1.75)
-
+                        new ProfileAccelConstraint(-15, 15))
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(48, 17, Math.toRadians(345)), Math.toRadians(0))
+                .waitSeconds(6)
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(40, 17, Math.toRadians(345)), Math.toRadians(0))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)

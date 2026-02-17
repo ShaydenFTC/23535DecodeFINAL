@@ -62,7 +62,7 @@ public class FarAutoRed1 extends LinearOpMode {
     public class Intake implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(0.9,0.9);
+            intake.intake(1,1);
         }
     }
 
@@ -76,7 +76,7 @@ public class FarAutoRed1 extends LinearOpMode {
     public class IntakeShoot implements InstantFunction {
         @Override
         public void run() {
-            intake.intake(0.85,0.85);
+            intake.intake(1,1);
         }
     }
     public class ReverseIntake implements InstantFunction {
@@ -103,7 +103,7 @@ public class FarAutoRed1 extends LinearOpMode {
     public class Shoot implements InstantFunction {
         @Override
         public void run() {
-            shooterTarget = -3850;
+            shooterTarget = -3620;
         }
     }
 
@@ -123,7 +123,7 @@ public class FarAutoRed1 extends LinearOpMode {
     public class MoveHood implements InstantFunction {
         @Override
         public void run() {
-            hood.setPosition(1);
+            hood.setPosition(0.95);
         }
     }
 
@@ -147,8 +147,8 @@ public class FarAutoRed1 extends LinearOpMode {
                 .stopAndAdd(new MoveHood())
                 .stopAndAdd(new Shoot())
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(48, 17, Math.toRadians(335)), Math.toRadians(180))
-                .waitSeconds(4)
+                .splineToSplineHeading(new Pose2d(55, 17, Math.toRadians(330)), Math.toRadians(180))
+                .waitSeconds(3)
                 .stopAndAdd(new IntakeShoot())
                 .waitSeconds(3)
                 .stopAndAdd(new stopIntake())
@@ -166,16 +166,16 @@ public class FarAutoRed1 extends LinearOpMode {
                 /// intaking
                 .stopAndAdd(new Intake())
                 .splineToSplineHeading(
-                        new Pose2d(34, 60, Math.toRadians(90)), Math.toRadians(90),
+                        new Pose2d(34, 65, Math.toRadians(90)), Math.toRadians(90),
                         new TranslationalVelConstraint(15),
-                        new ProfileAccelConstraint(-15, 15))
+                        new ProfileAccelConstraint(-30, 30))
                 .stopAndAdd(new ReverseIntake())
                 .stopAndAdd(new ReverseShoot())
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(48, 17, Math.toRadians(340)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(55, 17, Math.toRadians(340)), Math.toRadians(0))
                 .stopAndAdd(new stopIntake())
                 .stopAndAdd(new Shoot())
-                .waitSeconds(4)
+                .waitSeconds(3)
                 .stopAndAdd(new IntakeShoot())
                 .waitSeconds(3)
                 .stopAndAdd(new stopIntake())
