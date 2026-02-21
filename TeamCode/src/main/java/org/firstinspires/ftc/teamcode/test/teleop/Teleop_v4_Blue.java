@@ -89,7 +89,7 @@ public class Teleop_v4_Blue extends OpMode {
 
         /// Launcher PID control
         if (auto && Math.abs(gamepad2.left_stick_y) > 0.1) {
-            targetRPM =  -23.2 * sharedCam.CamAprilTagsRange("blue") + -1605;
+            targetRPM =  -16.3 * sharedCam.CamAprilTagsRange("red") + -1775;
         } else if (!auto) {
             targetRPM = -2200;
         }

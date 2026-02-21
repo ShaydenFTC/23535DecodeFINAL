@@ -18,6 +18,8 @@ public class Telop_v2 extends OpMode {
     Drive drive = new Drive();
     Intake_transfer intake_transfer = new Intake_transfer();
 
+    private Servo CameraMover;
+
     Hood Hood = new Hood();
 
     PIDshooter pidShooter = new PIDshooter();
@@ -65,13 +67,23 @@ public class Telop_v2 extends OpMode {
         aim.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         aim.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
+        CameraMover = hardwareMap.get(Servo.class, "CameraMover");
+
         hood = hardwareMap.get(Servo.class,"hood");
+
+        CameraMover.setPosition(0.2);
 
     }
     @Override
     public void loop() {
         double g1Intake = gamepad1.right_trigger - gamepad1.left_trigger;
         double g2Intake = gamepad2.right_trigger - gamepad2.left_trigger;
+
+        if (gamepad1.a)  {
+            CameraMover.setPosition(CameraMover.getPosition() - (0.0075));
+        } else if (gamepad1.b) {
+            CameraMover.setPosition(CameraMover.getPosition() +  (0.0075));
+        }
 
 
             /// Intake and transfer controls

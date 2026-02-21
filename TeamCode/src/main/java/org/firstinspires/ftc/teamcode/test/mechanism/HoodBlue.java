@@ -23,7 +23,7 @@ public class HoodBlue  {
 
         CameraMover = hardwareMap.get(Servo.class, "CameraMover");
 
-        CameraMover.setPosition(0.32);
+        CameraMover.setPosition(0.2);
         timer.reset();
     }
     public void MoveHood() {
@@ -32,17 +32,18 @@ public class HoodBlue  {
 
         double Height = lensCam.CamAprilTagsElevation("blue");
 
-        if (timer.seconds() > 0.05 && Height != 0) {
-            if (Height > 1)  {
-                CameraMover.setPosition(CameraMover.getPosition() - ((Height * 0.002) / (size * 0.03)));
+        if (timer.seconds() > 0.05) {
+            if (Height > 0.1)  {
+                CameraMover.setPosition(CameraMover.getPosition() - (0.0075));
                 timer.reset();
-            } else if (Height < -1) {
-                CameraMover.setPosition(CameraMover.getPosition() -  ((Height * 0.0025) / (size * 0.03)));
+            } else if (Height < -0.1) {
+                CameraMover.setPosition(CameraMover.getPosition() +  (0.0075));
                 timer.reset();
             }
-        } else if (timer.seconds() > 0.5) {
-            CameraMover.setPosition(0.3);
+        } else if (timer.seconds() > 2) {
+            CameraMover.setPosition(0.2);
+            timer.reset();
         }
-        hood.setPosition(7.43E-03 * size + -0.174);
+        hood.setPosition(9.85E-03 * size + -0.262);
     }
 }

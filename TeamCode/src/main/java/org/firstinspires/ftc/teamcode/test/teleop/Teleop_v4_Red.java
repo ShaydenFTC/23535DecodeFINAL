@@ -89,7 +89,7 @@ public class Teleop_v4_Red extends OpMode {
 
         /// Launcher PID control
         if (auto) {
-            targetRPM =  -23.2 * sharedCam.CamAprilTagsRange("red") + -1605;
+            targetRPM =  -16.3 * sharedCam.CamAprilTagsRange("red") + -1775;
         } else if (!auto) {
             targetRPM = -2200;
         }
